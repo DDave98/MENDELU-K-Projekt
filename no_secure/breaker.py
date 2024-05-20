@@ -13,6 +13,7 @@ def on_message(client, userdata, msg):
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
+print(f"Breaker Client Created")
 
 # Připojení k brokeru (localhost)
 client.connect("localhost", 1883, 60)
