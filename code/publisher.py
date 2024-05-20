@@ -1,9 +1,10 @@
 import paho.mqtt.client as mqtt
 import time
 
-
-client = mqtt.Client()                  # Vytvoření klienta
-client.connect("localhost", 1883, 60)   # Připojení k brokeru (localhost)
+# Vytvoření klienta
+id="e87b3f516b35fd30a05512012e125e7d"
+client = mqtt.Client(client_id=id)                  
+client.connect("127.0.0.1", 1883, 60)   # Připojení k brokeru (localhost)
 
 # Publikování zprávy na téma
 client.publish("test/topic", "Hello, MQTT!")
