@@ -1,22 +1,28 @@
-import paho.mqtt.client as mqtt
+import asyncio
+from hbmqtt.broker import Broker
 
-# Callback funkce pro připojení
-def on_connect(client, userdata, flags, rc):
-    print(f"Connected with result code {rc}")
-    client.subscribe("test/topic")
+config = {
+    'listeners': {
+        'default': {
+            'type': 'tcp',
+            'bind': '0.0.0.0:1883',
+        }
+    },
+    'sys_interval': 10,
+    'topic-check': {
+        'enabled': True,
+        'plugins': [
+            'topic_taboo'
+        ]
+    }
+}
 
-# Callback funkce pro příjem zpráv
-def on_message(client, userdata, msg):
-    print(f"{msg.topic} {msg.payload.decode()}")
+broker = Broker(config)
 
-# Nastavení klienta
-client = mqtt.Client()
-client.on_connect = on_connect
-client.on_message = on_message
-print(f"Breaker Client Created")
+async def start_broker():
+    await broker.start()
 
-# Připojení k brokeru (localhost)
-client.connect("localhost", 1883, 60)
-
-# Spuštění smyčky pro zpracování zpráv
-client.loop_forever()
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(start_broker())
+    loop.run_forever()
